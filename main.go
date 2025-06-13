@@ -16,12 +16,13 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
 const (
 	// UI Constants
-	appTitle     = "File Tree Scanner"
+	appTitle     = "File Tree Scanner: AI Agent helper"
 	windowWidth  = 800
 	windowHeight = 600
 
@@ -389,13 +390,13 @@ func NewFileTreeApp(config *Config) *FileTreeApp {
 	}
 
 	fyneApp := app.New()
-	fyneApp.SetIcon(nil)
+	fyneApp.SetIcon(theme.FolderIcon())
 
 	window := fyneApp.NewWindow(appTitle)
 	window.Resize(fyne.NewSize(windowWidth, windowHeight))
 
 	scanner := NewFileTreeScanner(config)
-	clipboard := NewFyneClipboardManager(window.Clipboard())
+	clipboard := NewFyneClipboardManager(fyneApp.Clipboard())
 
 	return &FileTreeApp{
 		app:         fyneApp,
@@ -404,7 +405,7 @@ func NewFileTreeApp(config *Config) *FileTreeApp {
 		scanner:     scanner,
 		clipboard:   clipboard,
 		treeData:    make(map[string][]string),
-		statusLabel: widget.NewLabel("Ready to scan directories"),
+		statusLabel: widget.NewLabel("Application started. Ready to scan"),
 	}
 }
 
@@ -412,13 +413,14 @@ func NewFileTreeApp(config *Config) *FileTreeApp {
 func (app *FileTreeApp) Run() {
 	content := app.createMainContent()
 	app.window.SetContent(content)
+	app.enableDragDrop()
 	app.window.ShowAndRun()
 }
 
 // createMainContent creates the main UI content.
 func (app *FileTreeApp) createMainContent() fyne.CanvasObject {
 	// Header
-	title := widget.NewLabel(appTitle)
+	title := widget.NewLabel("Main Menu")
 	title.TextStyle.Bold = true
 
 	// Buttons
@@ -426,7 +428,11 @@ func (app *FileTreeApp) createMainContent() fyne.CanvasObject {
 	saveBtn := widget.NewButton("💾 Save to File", app.handleSaveToFile)
 	copyBtn := widget.NewButton("📋 Copy to Clipboard", app.handleCopyToClipboard)
 
-	buttonContainer := container.NewHBox(selectBtn, saveBtn, copyBtn)
+	buttonContainer := container.NewGridWithColumns(3,
+		selectBtn,
+		saveBtn,
+		copyBtn,
+	)
 
 	// Initialize tree
 	app.tree = app.createTree()
@@ -623,7 +629,7 @@ func (app *FileTreeApp) handleSaveToFile() {
 	timestamp := time.Now().Format(timeFormat)
 	defaultName := fmt.Sprintf("file_tree_%s%s", timestamp, defaultFileExt)
 
-	// Async dialog - NO BLOCKING!
+	// Async dialog
 	saveDialog := dialog.NewFileSave(func(writer fyne.URIWriteCloser, err error) {
 		if err != nil {
 			app.showError("Save Error", err)
@@ -672,6 +678,28 @@ func (app *FileTreeApp) getCurrentResult() *ScanResult {
 // showError shows an error dialog.
 func (app *FileTreeApp) showError(title string, err error) {
 	dialog.ShowError(fmt.Errorf("%s: %w", title, err), app.window)
+}
+
+func (app *FileTreeApp) enableDragDrop() {
+	app.window.SetOnDropped(func(position fyne.Position, uris []fyne.URI) {
+		if len(uris) > 0 {
+			uri := uris[0] // Take first dropped item
+
+			// Convert URI to local path
+			if uri.Scheme() == "file" {
+				path := uri.Path()
+
+				// Check if it's a directory
+				if info, err := os.Stat(path); err == nil && info.IsDir() {
+					app.scanDirectoryAsync(path)
+				} else {
+					dialog.ShowError(fmt.Errorf("please drop a folder, not a file"), app.window)
+				}
+			} else {
+				dialog.ShowError(fmt.Errorf("invalid file path"), app.window)
+			}
+		}
+	})
 }
 
 func main() {
