@@ -1,4 +1,4 @@
-module file-tree-scanner
+module github.com/Akaiko1/file-tree-scanner
 
 go 1.21
 
