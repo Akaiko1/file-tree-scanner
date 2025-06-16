@@ -53,9 +53,16 @@ xcode-select --install
 # Or install Go with CGO support and ensure gcc is in PATH
 ```
 
-**Build:**
+**Install with `go install`**
 ```bash
-git clone https://github.com/yourusername/file-tree-scanner.git
+# Ensure $GOPATH/bin is in your PATH
+go install github.com/Akaiko1/file-tree-scanner@latest
+```
+
+
+**Or use manual Build:**
+```bash
+git clone https://github.com/Akaiko1/file-tree-scanner.git
 cd file-tree-scanner
 go mod tidy
 go run main.go
