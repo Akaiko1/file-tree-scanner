@@ -4,7 +4,7 @@
 
 A cross-platform GUI application for scanning directory structures and generating formatted file trees, designed to provide clear project structure snapshots for AI agents.
 
-![File Tree Scanner GUI](src/gui_examle.png)
+![File Tree Scanner GUI](src/gui_example.png)
 
 ## Purpose
 
