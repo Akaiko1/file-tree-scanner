@@ -680,6 +680,7 @@ func (app *FileTreeApp) showError(title string, err error) {
 	dialog.ShowError(fmt.Errorf("%s: %w", title, err), app.window)
 }
 
+// TODO: Nesting removal
 func (app *FileTreeApp) enableDragDrop() {
 	app.window.SetOnDropped(func(position fyne.Position, uris []fyne.URI) {
 		if len(uris) > 0 {

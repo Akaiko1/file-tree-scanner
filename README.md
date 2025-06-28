@@ -65,13 +65,14 @@ go install github.com/Akaiko1/file-tree-scanner@latest
 git clone https://github.com/Akaiko1/file-tree-scanner.git
 cd file-tree-scanner
 go mod tidy
-go run main.go
+go build -ldflags="-H windowsgui" .
 ```
 
 ## Usage
 
 1. Launch the application
 2. Click "📁 Select Folder" to choose a directory
+    2a. Or just drag & drop the folder onto the app's active window
 3. Copy the generated tree with "📋 Copy to Clipboard"
 4. Paste into your AI conversation to explain your project structure
 
