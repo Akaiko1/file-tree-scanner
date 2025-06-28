@@ -4,7 +4,7 @@
 
 A cross-platform GUI application for scanning directory structures and generating formatted file trees, designed to provide clear project structure snapshots for AI agents.
 
-![File Tree Scanner GUI](src/gui_examle.png)
+![File Tree Scanner GUI](src/gui_example.png)
 
 ## Purpose
 
@@ -72,7 +72,7 @@ go build -ldflags="-H windowsgui" .
 
 1. Launch the application
 2. Click "📁 Select Folder" to choose a directory
-    2a. Or just drag & drop the folder onto the app's active window
+   - Or just drag & drop the folder onto the app's active window
 3. Copy the generated tree with "📋 Copy to Clipboard"
 4. Paste into your AI conversation to explain your project structure
 
