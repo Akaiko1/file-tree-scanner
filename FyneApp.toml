@@ -1,0 +1,8 @@
+[Details]
+Icon = "Icon.png"
+Name = "File Tree Scanner"
+ID = "com.github.akaiko1.file-tree-scanner"
+Version = "1.0.0"
+
+[Development]
+fyneDo = "true"

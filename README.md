@@ -56,7 +56,7 @@ xcode-select --install
 **Install with `go install`**
 ```bash
 # Ensure $GOPATH/bin is in your PATH
-go install github.com/Akaiko1/file-tree-scanner@latest
+go install github.com/Akaiko1/file-tree-scanner/cmd@latest
 ```
 
 
@@ -65,7 +65,15 @@ go install github.com/Akaiko1/file-tree-scanner@latest
 git clone https://github.com/Akaiko1/file-tree-scanner.git
 cd file-tree-scanner
 go mod tidy
-go build -ldflags="-H windowsgui" .
+
+# Linux/macOS
+go build -o file-tree-scanner ./cmd
+
+# Windows (GUI - no console)
+go build -ldflags="-H windowsgui" -o file-tree-scanner.exe ./cmd
+
+# Windows (using PowerShell build script)
+.\build.ps1
 ```
 
 ## Usage
